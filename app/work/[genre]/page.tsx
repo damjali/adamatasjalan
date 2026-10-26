@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Gallery from "@/components/Gallery";
 import GenreHero from "@/components/GenreHero";
@@ -53,6 +54,13 @@ export default async function GenrePage({ params }: Props) {
             <div>
               <span className="eyebrow muted">Packages from</span>
               <span>RM {from.toLocaleString()}</span>
+              <Link
+                href={`/pricing?genre=${genre.slug}`}
+                className="btn"
+                style={{ justifySelf: "start", marginTop: 10 }}
+              >
+                View {genre.label} price list →
+              </Link>
             </div>
           </div>
         </div>
