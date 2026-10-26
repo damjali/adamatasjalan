@@ -30,7 +30,7 @@ const gear = [
 ];
 
 export default async function AboutPage() {
-  const portrait = "/adam.png";
+  const portrait = "/adam.webp";
 
   return (
     <>

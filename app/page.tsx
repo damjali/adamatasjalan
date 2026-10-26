@@ -22,7 +22,7 @@ const marquee = (
 export default async function Home() {
   return (
     <>
-      <Hero src="/adam.png" />
+      <Hero src="/adam.webp" />
       <Statement />
       <GenreIndex />
       <HorizontalGallery />
