@@ -168,13 +168,40 @@ button {
   transform-origin: left;
 }
 .brand {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  padding-bottom: 6px;
   font-family: var(--font-serif), serif;
   font-size: 22px;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.2em;
   white-space: nowrap;
 }
 .brand em {
+  font-size: 0.9em;
+  font-weight: 300;
   font-style: italic;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+/* Thin line beneath, the "road" */
+.brand::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0.2em;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+@media (max-width: 560px) {
+  .brand {
+    font-size: 17px;
+  }
 }
 .menu-btn {
   display: none;

@@ -43,7 +43,9 @@ export default function Header() {
           {leftLinks.map(link)}
         </nav>
         <Link href="/" className="brand" aria-label="Home">
-          Adam <em>atas</em> Jalan
+          <span>adam</span>
+          <em>atas</em>
+          <span>jalan</span>
         </Link>
         <nav className="nav right" aria-label="Genres">
           {rightLinks.map(link)}
