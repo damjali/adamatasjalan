@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import Gallery from "@/components/Gallery";
 import GenreHero from "@/components/GenreHero";
@@ -25,8 +23,6 @@ export default async function GenrePage({ params }: Props) {
   const portfolio = await getPortfolio();
   const content = portfolio.genres[genre.slug];
   const i = genres.indexOf(genre);
-  const next = genres[(i + 1) % genres.length];
-  const nextCover = portfolio.genres[next.slug].cover;
   const from = Math.min(...pricing[genre.slug].map((t) => t.price));
 
   return (
@@ -83,36 +79,6 @@ export default async function GenrePage({ params }: Props) {
             </div>
           ))}
         </div>
-      </section>
-
-      <section className="dark container">
-        <Link href={`/work/${next.slug}`} className="next-genre">
-          <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-            Next discipline
-          </p>
-          <span className="serif">
-            <em>{next.title}</em> →
-          </span>
-          {nextCover && (
-            <div
-              style={{
-                position: "relative",
-                width: "min(420px, 70vw)",
-                aspectRatio: "16/10",
-                margin: "48px auto 0",
-                overflow: "hidden",
-              }}
-            >
-              <Image
-                src={nextCover.src}
-                alt=""
-                fill
-                sizes="420px"
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-          )}
-        </Link>
       </section>
     </>
   );
