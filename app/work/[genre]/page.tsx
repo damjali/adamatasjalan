@@ -54,10 +54,6 @@ export default async function GenrePage({ params }: Props) {
               <span className="eyebrow muted">Packages from</span>
               <span>RM {from.toLocaleString()}</span>
             </div>
-            <div>
-              <span className="eyebrow muted">Availability</span>
-              <span>Booking 2026 – 2027</span>
-            </div>
           </div>
         </div>
 

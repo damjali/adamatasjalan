@@ -25,10 +25,6 @@ export default async function BookPage({ searchParams }: Props) {
       <div className="container section" style={{ paddingTop: 0 }}>
         <div className="book-grid">
           <Reveal>
-            <p className="lead muted">
-              Dates fill up quickly — especially convocation and wedding season. Share a few details and
-              I&apos;ll get back to you within 24 hours.
-            </p>
             <ul className="contact-list">
               <li>
                 <span className="eyebrow muted">Email</span>

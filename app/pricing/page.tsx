@@ -25,12 +25,6 @@ export default async function PricingPage({ searchParams }: Props) {
             </Reveal>
             <RevealLines className="serif h1" lines={[<>Price</>, <em key="l">List</em>]} />
           </div>
-          <Reveal>
-            <p className="lead">
-              Transparent packages for every occasion. Need something different? Every package can be
-              tailored — just ask.
-            </p>
-          </Reveal>
         </div>
       </div>
 
