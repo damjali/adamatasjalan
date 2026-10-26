@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { driveConfigured, driveRootId, listFolder } from "./drive";
 import { addOns as defaultAddOns, faqs as defaultFaqs, genres, pricing as defaultPricing, type Tier } from "./data";
 
 /*
@@ -15,9 +16,25 @@ import { addOns as defaultAddOns, faqs as defaultFaqs, genres, pricing as defaul
  * built-in defaults from data.ts are used instead.
  */
 
-const SHEET_ID = (
-  process.env.GOOGLE_SHEET_ID?.trim() || "1kTFOqCadqYdwV-i_l4QcGqg8b3reHC3F3YcO28jLyKM"
-).replace(/^.*\/d\/([\w-]+).*$/, "$1");
+const FALLBACK_SHEET_ID = "1kTFOqCadqYdwV-i_l4QcGqg8b3reHC3F3YcO28jLyKM";
+const SHEET_MIME = "application/vnd.google-apps.spreadsheet";
+
+// GOOGLE_SHEET_ID wins; otherwise use the Google Sheet sitting in the root Drive folder
+// (preferring one with "price" in its name), so replacing the file needs no code change.
+async function resolveSheetId(): Promise<string> {
+  const env = process.env.GOOGLE_SHEET_ID?.trim();
+  if (env) return env.replace(/^.*\/d\/([\w-]+).*$/, "$1");
+  if (driveConfigured()) {
+    try {
+      const sheets = (await listFolder(driveRootId()!, 300)).filter((f) => f.mimeType === SHEET_MIME);
+      const pick = sheets.find((f) => /price/i.test(f.name)) ?? sheets[0];
+      if (pick) return pick.id;
+    } catch {
+      // fall through to the built-in sheet
+    }
+  }
+  return FALLBACK_SHEET_ID;
+}
 const REVALIDATE_SECONDS = 60;
 
 export type AddOn = { name: string; price: string };
@@ -81,8 +98,13 @@ function parseCsv(input: string): string[][] {
 type Row = Record<string, string>;
 
 // Google returns the first tab when the requested one does not exist, so require the right headers.
-async function readTab(tab: string, required: string[], forbidden: string[] = []): Promise<Row[]> {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
+async function readTab(
+  sheetId: string,
+  tab: string,
+  required: string[],
+  forbidden: string[] = []
+): Promise<Row[]> {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
   const res = await fetch(url, { next: { revalidate: REVALIDATE_SECONDS } });
   if (!res.ok) throw new Error(`Sheet tab "${tab}": HTTP ${res.status}`);
   const [header, ...rows] = parseCsv(await res.text());
@@ -95,8 +117,8 @@ async function readTab(tab: string, required: string[], forbidden: string[] = []
 }
 
 // A tab that fails or is missing falls back to the defaults rather than breaking the page.
-const safeTab = (tab: string, required: string[], forbidden: string[] = []) =>
-  readTab(tab, required, forbidden).catch(() => [] as Row[]);
+const safeTab = (sheetId: string, tab: string, required: string[], forbidden: string[] = []) =>
+  readTab(sheetId, tab, required, forbidden).catch(() => [] as Row[]);
 
 const isTrue = (v: string) => /^(y|yes|true|1|x|✓)$/i.test(v.trim());
 
@@ -122,11 +144,12 @@ function parsePackages(rows: Row[]): Record<string, Tier[]> {
 }
 
 export const getPriceData = cache(async (): Promise<PriceData> => {
+  const id = await resolveSheetId();
   const [packages, addOnRows, faqRows, settings] = await Promise.all([
-    safeTab("Packages", ["category", "name", "price"]),
-    safeTab("Add-ons", ["name", "price"], ["category"]),
-    safeTab("FAQ", ["question", "answer"]),
-    safeTab("Settings", ["key", "value"]),
+    safeTab(id, "Packages", ["category", "name", "price"]),
+    safeTab(id, "Add-ons", ["name", "price"], ["category"]),
+    safeTab(id, "FAQ", ["question", "answer"]),
+    safeTab(id, "Settings", ["key", "value"]),
   ]);
 
   const fromSheet = parsePackages(packages);
