@@ -1168,6 +1168,11 @@ button {
 .project:first-of-type {
   margin-top: 0;
 }
+/* the info row above already draws a rule, so skip the duplicate */
+.project:first-of-type .project-head {
+  border-top: 0;
+  padding-top: 0;
+}
 .project-head {
   display: grid;
   grid-template-columns: 80px 1fr auto;

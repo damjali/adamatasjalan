@@ -65,7 +65,7 @@ export default async function GenrePage({ params }: Props) {
           </div>
         </div>
 
-        <div className="section container">
+        <div className="section container" style={{ paddingTop: "clamp(32px, 5vw, 64px)" }}>
           {content.projects.length === 0 && (
             <p className="eyebrow muted" style={{ textAlign: "center" }}>
               New work coming soon.
