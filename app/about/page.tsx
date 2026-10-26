@@ -3,10 +3,6 @@ import Link from "next/link";
 import Counter from "@/components/Counter";
 import ParallaxImage from "@/components/ParallaxImage";
 import { Reveal, RevealLines } from "@/components/Reveal";
-import { getPortfolio } from "@/lib/portfolio";
-
-// Always rendered on request so photos added to Drive show up straight away.
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: "About Me" };
 
@@ -34,8 +30,7 @@ const gear = [
 ];
 
 export default async function AboutPage() {
-  const portfolio = await getPortfolio();
-  const portrait = portfolio.about[0]?.src ?? "https://picsum.photos/seed/aaj-portrait/1200/1500";
+  const portrait = "/adam.png";
 
   return (
     <>
