@@ -115,6 +115,9 @@ export default function Gallery({ shots }: { shots: Shot[] }) {
               <div className="img-fill" style={{ position: "absolute", inset: 0 }}>
                 <Image src={shots[index].src} alt={shots[index].alt} fill sizes="100vw" />
               </div>
+              <span className="watermark" aria-hidden>
+                @adam<em>atas</em>jalan
+              </span>
             </div>
             <div className="lightbox-bottom" onClick={(e) => e.stopPropagation()}>
               <button className="eyebrow nav-link" onClick={() => go(-1)}>
