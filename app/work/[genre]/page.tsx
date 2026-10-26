@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Gallery from "@/components/Gallery";
-import ParallaxImage from "@/components/ParallaxImage";
+import GenreHero from "@/components/GenreHero";
 import { Reveal, RevealLines } from "@/components/Reveal";
 import { genres, getGenre, pricing } from "@/lib/data";
 import { getPortfolio } from "@/lib/portfolio";
@@ -42,18 +42,12 @@ export default async function GenrePage({ params }: Props) {
               </Reveal>
               <RevealLines className="serif display" lines={[<em key="t">{genre.title}</em>]} />
             </div>
-            <Reveal>
-              <p className="lead">{genre.tagline}</p>
-            </Reveal>
           </div>
         </div>
 
-        {content.cover && (
-          <div className="genre-hero">
-            <ParallaxImage src={content.cover.src} alt={genre.title} priority />
-          </div>
-        )}
-
+        <GenreHero
+          shots={content.projects.flatMap((p) => p.shots.map((s) => ({ src: s.src, name: p.name })))}
+        />
         <div className="container">
           <div className="genre-meta">
             <div>
@@ -72,23 +66,6 @@ export default async function GenrePage({ params }: Props) {
         </div>
 
         <div className="section container">
-          <div className="split" style={{ marginBottom: "clamp(60px, 8vw, 120px)" }}>
-            <p className="eyebrow">( About the work )</p>
-            <Reveal>
-              <p className="serif h3" style={{ lineHeight: 1.2, maxWidth: "28ch" }}>
-                {genre.intro}
-              </p>
-              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 40 }}>
-                <Link href={`/book?genre=${genre.slug}`} className="btn solid">
-                  Book {genre.label} →
-                </Link>
-                <Link href={`/pricing?genre=${genre.slug}`} className="btn">
-                  See pricing
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-
           {content.projects.length === 0 && (
             <p className="eyebrow muted" style={{ textAlign: "center" }}>
               New work coming soon.
