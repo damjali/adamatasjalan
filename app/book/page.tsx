@@ -1,0 +1,54 @@
+import type { Metadata } from "next";
+import BookingForm from "@/components/BookingForm";
+import { Reveal, RevealLines } from "@/components/Reveal";
+import { genres } from "@/lib/data";
+
+export const metadata: Metadata = { title: "Book Now" };
+
+type Props = { searchParams: Promise<{ genre?: string; package?: string }> };
+
+export default async function BookPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const genre = genres.some((g) => g.slug === params.genre) ? params.genre! : genres[0].slug;
+
+  return (
+    <section className="dark" style={{ minHeight: "100vh" }}>
+      <div className="page-head">
+        <Reveal>
+          <p className="eyebrow muted" style={{ marginBottom: 24 }}>
+            ( Book Now )
+          </p>
+        </Reveal>
+        <RevealLines className="serif h1" lines={[<>Let&apos;s tell</>, <>your <em>story.</em></>]} />
+      </div>
+
+      <div className="container section" style={{ paddingTop: 0 }}>
+        <div className="book-grid">
+          <Reveal>
+            <p className="lead muted">
+              Dates fill up quickly — especially convocation and wedding season. Share a few details and
+              I&apos;ll get back to you within 24 hours.
+            </p>
+            <ul className="contact-list">
+              <li>
+                <span className="eyebrow muted">Email</span>
+                <a href="mailto:hello@adamatasjalan.com">hello@adamatasjalan.com</a>
+              </li>
+              <li>
+                <span className="eyebrow muted">WhatsApp</span>
+                <a href="https://wa.me/60000000000">+60 00-000 0000</a>
+              </li>
+              <li>
+                <span className="eyebrow muted">Studio</span>
+                <span>Kuala Lumpur, Malaysia</span>
+              </li>
+            </ul>
+          </Reveal>
+          <Reveal>
+            <BookingForm genre={genre} pkg={params.package} />
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
