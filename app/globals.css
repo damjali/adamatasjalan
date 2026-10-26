@@ -336,8 +336,6 @@ button {
 .hero-portrait .hero-media img {
   object-fit: contain;
   object-position: 72% center;
-  mix-blend-mode: multiply;
-  filter: brightness(1.06);
 }
 .hero-portrait::after {
   display: none;
@@ -998,10 +996,6 @@ button {
 }
 .portrait img {
   object-fit: cover;
-  /* Multiply turns the photo's white backdrop into the page colour;
-     the brightness lift pushes near-white to pure white first. */
-  mix-blend-mode: multiply;
-  filter: brightness(1.06);
 }
 .prose p + p {
   margin-top: 1.2em;
