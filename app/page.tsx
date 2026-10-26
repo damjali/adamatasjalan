@@ -4,7 +4,6 @@ import Statement from "@/components/home/Statement";
 import GenreIndex from "@/components/home/GenreIndex";
 import HorizontalGallery from "@/components/home/HorizontalGallery";
 import { Reveal, RevealLines } from "@/components/Reveal";
-import { getPortfolio } from "@/lib/portfolio";
 
 // Always rendered on request so photos added to Drive show up straight away.
 export const dynamic = "force-dynamic";
@@ -21,15 +20,9 @@ const marquee = (
 );
 
 export default async function Home() {
-  const portfolio = await getPortfolio();
-  const hero =
-    portfolio.home[0] ??
-    Object.values(portfolio.genres).find((g) => g.cover)?.cover ??
-    null;
-
   return (
     <>
-      <Hero src={hero?.src ?? "https://picsum.photos/seed/aaj-hero/2400/1600"} />
+      <Hero src="/adam.png" />
       <Statement />
       <GenreIndex />
       <HorizontalGallery />

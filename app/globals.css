@@ -315,6 +315,28 @@ button {
   object-fit: cover;
   filter: brightness(0.62);
 }
+/* Light hero for the studio portrait: its white backdrop melts into the page colour */
+.hero-portrait {
+  background: var(--white);
+  color: var(--black);
+}
+.hero-portrait .hero-media img {
+  object-fit: contain;
+  object-position: 72% center;
+  mix-blend-mode: multiply;
+  filter: brightness(1.06);
+}
+.hero-portrait::after {
+  display: none;
+}
+.hero-portrait .hero-bottom {
+  border-top-color: var(--line-light);
+}
+@media (max-width: 860px) {
+  .hero-portrait .hero-media img {
+    object-position: center top;
+  }
+}
 .hero::after {
   content: "";
   position: absolute;

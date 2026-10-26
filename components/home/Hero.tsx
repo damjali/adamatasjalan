@@ -3,9 +3,9 @@ import { RevealLines } from "../Reveal";
 
 export default function Hero({ src }: { src: string }) {
   return (
-    <section className="hero">
+    <section className="hero hero-portrait">
       <div className="hero-media">
-        <Image src={src} alt="Featured photograph" fill priority referrerPolicy="no-referrer" sizes="100vw" />
+        <Image src={src} alt="Portrait of Adam" fill priority sizes="100vw" />
       </div>
 
       <div className="hero-inner">
