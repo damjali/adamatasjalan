@@ -45,7 +45,7 @@ export default function Gallery({ shots }: { shots: Shot[] }) {
               alt={s.alt}
               width={s.w}
               height={s.h}
-              sizes="(max-width: 560px) 100vw, (max-width: 1000px) 50vw, 33vw"
+              sizes="(max-width: 560px) 34vw, (max-width: 1000px) 50vw, 33vw"
             />
             <span className="idx eyebrow">{String(i + 1).padStart(2, "0")}</span>
           </button>
