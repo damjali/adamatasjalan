@@ -2,9 +2,18 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { genres, pricing } from "@/lib/data";
+import { genres, type Tier } from "@/lib/data";
+import type { PriceText } from "@/lib/sheet";
 
-export default function PricingTabs({ initial }: { initial: string }) {
+export default function PricingTabs({
+  initial,
+  pricing,
+  text,
+}: {
+  initial: string;
+  pricing: Record<string, Tier[]>;
+  text: PriceText;
+}) {
   const [active, setActive] = useState(initial);
 
   return (
@@ -29,11 +38,11 @@ export default function PricingTabs({ initial }: { initial: string }) {
             <article key={t.name} className={`tier${t.featured ? " featured dark" : " light"}`}>
               <div className="flex-between" style={{ alignItems: "center" }}>
                 <span className="eyebrow">{t.name}</span>
-                {t.featured && <span className="eyebrow muted">Most loved</span>}
+                {t.featured && <span className="eyebrow muted">{text.most_loved_label}</span>}
               </div>
               <div>
                 <p className="serif price">
-                  <small>RM</small>
+                  <small>{text.currency}</small>
                   {t.price.toLocaleString()}
                 </p>
                 <p className="muted" style={{ marginTop: 10 }}>
@@ -46,7 +55,7 @@ export default function PricingTabs({ initial }: { initial: string }) {
                 ))}
               </ul>
               <Link href={`/book?genre=${active}&package=${encodeURIComponent(t.name)}`} className="btn">
-                Book {t.name} →
+                {text.book_button.replace("{name}", t.name)}
               </Link>
             </article>
           ))}

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { faqs } from "@/lib/data";
+import type { Faq as FaqItem } from "@/lib/sheet";
 
-export default function Faq() {
+export default function Faq({ faqs }: { faqs: FaqItem[] }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (

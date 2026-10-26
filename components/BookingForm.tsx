@@ -1,9 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { genres, pricing } from "@/lib/data";
+import { genres, type Tier } from "@/lib/data";
 
-export default function BookingForm({ genre, pkg }: { genre: string; pkg?: string }) {
+export default function BookingForm({
+  genre,
+  pkg,
+  pricing,
+  currency,
+}: {
+  genre: string;
+  pkg?: string;
+  pricing: Record<string, Tier[]>;
+  currency: string;
+}) {
   const [selected, setSelected] = useState(genre);
   const [sent, setSent] = useState(false);
 
@@ -78,7 +88,7 @@ export default function BookingForm({ genre, pkg }: { genre: string; pkg?: strin
         <select id="package" name="package" key={selected} defaultValue={pkg}>
           {pricing[selected].map((t) => (
             <option key={t.name} value={t.name}>
-              {t.name} — RM {t.price.toLocaleString()}
+              {t.name} — {currency} {t.price.toLocaleString()}
             </option>
           ))}
           <option value="custom">Something custom</option>

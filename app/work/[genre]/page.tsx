@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import Gallery from "@/components/Gallery";
 import GenreHero from "@/components/GenreHero";
 import { Reveal, RevealLines } from "@/components/Reveal";
-import { genres, getGenre, pricing } from "@/lib/data";
+import { genres, getGenre } from "@/lib/data";
+import { getPriceData } from "@/lib/sheet";
 import { getPortfolio } from "@/lib/portfolio";
 
 // Always rendered on request so photos added to Drive show up straight away.
@@ -24,6 +25,7 @@ export default async function GenrePage({ params }: Props) {
   const portfolio = await getPortfolio();
   const content = portfolio.genres[genre.slug];
   const i = genres.indexOf(genre);
+  const { pricing, text } = await getPriceData();
   const from = Math.min(...pricing[genre.slug].map((t) => t.price));
 
   return (
@@ -52,8 +54,8 @@ export default async function GenrePage({ params }: Props) {
               <span>Photography · Videography</span>
             </div>
             <div>
-              <span className="eyebrow muted">Packages from</span>
-              <span>RM {from.toLocaleString()}</span>
+              <span className="eyebrow muted">{text.from_label}</span>
+              <span>{text.currency} {from.toLocaleString()}</span>
               <Link
                 href={`/pricing?genre=${genre.slug}`}
                 className="btn"

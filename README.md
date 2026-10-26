@@ -40,3 +40,24 @@ Portfolio/                    <- the root folder you share
    On your host (e.g. Vercel) set the same two variables.
 
 Until both are set the site shows placeholder photos.
+
+## Price list (Google Sheet)
+
+Packages, add-ons, FAQ and the wording on the Price List page come from a Google Sheet in the
+portfolio Drive folder (shared as **Anyone with the link → Viewer**). Edit a cell and the site
+updates within about a minute; responses are cached so pages open instantly, and the built-in
+defaults in `lib/data.ts` are used if the sheet is unreachable.
+
+Tabs (names matter, first row is the header, row order is display order):
+
+| Tab | Columns |
+| --- | --- |
+| Packages | Category · Name · Price · Duration · Featured · Feature 1 … Feature 8 |
+| Add-ons | Name · Price |
+| FAQ | Question · Answer |
+| Settings | Key · Value (button and heading wording; `{name}` in `book_button` becomes the package name) |
+
+`Category` is one of `convocation`, `weddings`, `sports`, `portraits`, `events`. Put `yes` under
+Featured for the highlighted "Most loved" card. Ready-made starting data is in `sheet-seed/`
+(File → Import → Upload → "Insert new sheet(s)", once per CSV). The sheet ID can be overridden
+with `GOOGLE_SHEET_ID`.

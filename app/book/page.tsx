@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import BookingForm from "@/components/BookingForm";
 import { Reveal, RevealLines } from "@/components/Reveal";
 import { genres } from "@/lib/data";
+import { getPriceData } from "@/lib/sheet";
 
 export const metadata: Metadata = { title: "Book Now" };
 
@@ -9,6 +10,7 @@ type Props = { searchParams: Promise<{ genre?: string; package?: string }> };
 
 export default async function BookPage({ searchParams }: Props) {
   const params = await searchParams;
+  const { pricing, text } = await getPriceData();
   const genre = genres.some((g) => g.slug === params.genre) ? params.genre! : genres[0].slug;
 
   return (
@@ -41,7 +43,7 @@ export default async function BookPage({ searchParams }: Props) {
             </ul>
           </Reveal>
           <Reveal>
-            <BookingForm genre={genre} pkg={params.package} />
+            <BookingForm genre={genre} pkg={params.package} pricing={pricing} currency={text.currency} />
           </Reveal>
         </div>
       </div>
