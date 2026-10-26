@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { genres } from "@/lib/data";
 
 const leftLinks = [
@@ -16,6 +16,21 @@ const rightLinks = genres.map((g) => ({ href: `/work/${g.slug}`, label: g.label 
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Nav backdrop: none at the top of the page, fading in as you scroll down.
+  useEffect(() => {
+    const update = () => {
+      const el = headerRef.current;
+      if (!el) return;
+      const fade = Math.min(1, window.scrollY / 160);
+      el.style.setProperty("--fade", String(fade));
+      el.classList.toggle("scrolled", fade > 0.35);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -38,7 +53,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="header">
+      <header className="header" ref={headerRef}>
         <nav className="nav" aria-label="Studio">
           {leftLinks.map(link)}
         </nav>
