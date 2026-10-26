@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     "Photography and videography for convocations, weddings, sports, portraits and events. Based in Kuala Lumpur.",
 };
 
+// Root layout: shared header and footer around every page.
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable}`}>
