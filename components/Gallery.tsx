@@ -1,58 +1,68 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Shot } from "@/lib/data";
 
-type Span = [cols: number, rows: number];
+// Justified rows: every photo keeps its own aspect ratio (portraits stay tall, landscapes
+// stay wide, nothing is cropped) and each row is scaled to fill the full width, so no gaps.
+const MAX_PER_ROW = 5;
 
-// Every block is a full-width rectangle on the 3-column mobile grid, so any
-// sequence of blocks tiles with no holes. Tile order matches grid auto-placement.
-const S: Span = [1, 1];
-const BLOCKS: Span[][] = [
-  [S, S, S],
-  [[2, 2], S, S],
-  [S, [2, 2], S],
-  [[1, 2], S, S, S, S],
-  [S, S, [1, 2], S, S],
-  [[2, 1], S],
-  [S, [2, 1]],
-];
-const BANNER: Span = [3, 1];
+function targetHeight(width: number) {
+  return width < 560 ? 170 : width < 1000 ? 240 : 300;
+}
 
-// Deterministic, so server and client render the same layout.
-function layout(count: number): Span[] {
-  let seed = count * 7919 + 1;
-  const rand = () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-  const spans: Span[] = [];
-  let last = -1;
-  while (spans.length < count) {
-    const left = count - spans.length;
-    const fits = BLOCKS.map((b, i) => i).filter((i) => BLOCKS[i].length <= left && i !== last);
-    if (fits.length === 0) {
-      // 1 photo left (or only the repeat fits): fill the row with a full-width banner
-      if (left === 1) spans.push(BANNER);
-      else {
-        const i = BLOCKS.findIndex((b) => b.length <= left);
-        spans.push(...BLOCKS[i]);
+// Split photos into consecutive rows whose heights are all as close to the target as possible.
+function partition(aspects: number[], width: number, gap: number): number[][] {
+  const n = aspects.length;
+  const target = targetHeight(width);
+  const best = new Array<number>(n + 1).fill(Infinity);
+  const from = new Array<number>(n + 1).fill(0);
+  best[0] = 0;
+  for (let j = 1; j <= n; j++) {
+    let sum = 0;
+    for (let i = j - 1; i >= Math.max(0, j - MAX_PER_ROW); i--) {
+      sum += aspects[i];
+      const height = (width - gap * (j - i - 1)) / sum;
+      const cost = best[i] + (height - target) ** 2;
+      if (cost < best[j]) {
+        best[j] = cost;
+        from[j] = i;
       }
-      break;
     }
-    last = fits[Math.floor(rand() * fits.length)];
-    spans.push(...BLOCKS[last]);
   }
-  return spans.slice(0, count);
+  const rows: number[][] = [];
+  for (let j = n; j > 0; j = from[j]) {
+    rows.unshift(Array.from({ length: j - from[j] }, (_, k) => from[j] + k));
+  }
+  return rows;
 }
 
 export default function Gallery({ shots }: { shots: Shot[] }) {
   const [index, setIndex] = useState<number | null>(null);
-  const spans = useMemo(() => layout(shots.length), [shots.length]);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(390);
+  useEffect(() => {
+    const el = galleryRef.current;
+    if (!el) return;
+    const measure = () => setWidth(Math.round(el.clientWidth) || 390);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const gap = width < 560 ? 4 : 12;
+  const rows = useMemo(
+    () =>
+      partition(
+        shots.map((s) => s.w / s.h),
+        width,
+        gap
+      ),
+    [shots, width, gap]
+  );
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -78,25 +88,34 @@ export default function Gallery({ shots }: { shots: Shot[] }) {
 
   return (
     <>
-      <div className="gallery">
-        {shots.map((s, i) => (
-          <button
-            key={s.src}
-            className="gallery-item"
-            style={{ "--c": spans[i][0], "--r": spans[i][1] } as React.CSSProperties}
-            onClick={() => setIndex(i)}
-            aria-label={`Open ${s.alt}`}
-          >
-            <Image
-              src={s.src}
-              alt={s.alt}
-              width={s.w}
-              height={s.h}
-              sizes="(max-width: 560px) 34vw, (max-width: 1000px) 50vw, 33vw"
-            />
-            <span className="idx eyebrow">{String(i + 1).padStart(2, "0")}</span>
-          </button>
-        ))}
+      <div className="gallery" ref={galleryRef} style={{ "--g": `${gap}px` } as React.CSSProperties}>
+        {rows.map((row) => {
+          const aspects = row.map((i) => shots[i].w / shots[i].h);
+          const sum = aspects.reduce((x, y) => x + y, 0);
+          const rowHeight = (width - gap * (row.length - 1)) / sum;
+          return (
+            <div className="gallery-row" key={row[0]} style={{ aspectRatio: width / rowHeight }}>
+              {row.map((i, k) => (
+                <button
+                  key={shots[i].src}
+                  className="gallery-item"
+                  style={{ flex: `${aspects[k]} 1 0%` }}
+                  onClick={() => setIndex(i)}
+                  aria-label={`Open ${shots[i].alt}`}
+                >
+                  <Image
+                    src={shots[i].src}
+                    alt={shots[i].alt}
+                    fill
+                    sizes="(max-width: 560px) 70vw, (max-width: 1000px) 45vw, 30vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <span className="idx eyebrow">{String(i + 1).padStart(2, "0")}</span>
+                </button>
+              ))}
+            </div>
+          );
+        })}
       </div>
 
       {mounted &&
