@@ -31,7 +31,7 @@ export default function Footer() {
         <div>
           <h4 className="eyebrow">Say hello</h4>
           <ul>
-            <li><a href="mailto:hello@adamatasjalan.com">hello@adamatasjalan.com</a></li>
+            <li><a href="mailto:AdamRazali54@gmail.com">AdamRazali54@gmail.com</a></li>
             <li><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></li>
             <li><a href="https://tiktok.com" target="_blank" rel="noreferrer">TikTok</a></li>
             <li><a href="https://wa.me/60000000000" target="_blank" rel="noreferrer">WhatsApp</a></li>

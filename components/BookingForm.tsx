@@ -7,9 +7,26 @@ export default function BookingForm({ genre, pkg }: { genre: string; pkg?: strin
   const [selected, setSelected] = useState(genre);
   const [sent, setSent] = useState(false);
 
-  // No backend yet — wire this up to email, a form service or an API route later.
-  const onSubmit = (e: React.FormEvent) => {
+  // Opens WhatsApp with the enquiry details pre-filled for the photographer.
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const get = (k: string) => String(f.get(k) ?? "").trim();
+    const genreTitle = genres.find((g) => g.slug === get("genre"))?.title ?? get("genre");
+    const lines = [
+      "Hi Adam, I'd like to enquire about a booking.",
+      "",
+      `*Name:* ${get("name")}`,
+      `*Email:* ${get("email")}`,
+      get("phone") && `*Phone / WhatsApp:* ${get("phone")}`,
+      `*Event date:* ${get("date")}`,
+      `*Type of shoot:* ${genreTitle}`,
+      `*Package:* ${get("package")}`,
+      get("location") && `*Location:* ${get("location")}`,
+      get("message") && `*Details:* ${get("message")}`,
+    ].filter((l): l is string => l !== false);
+    const url = `https://wa.me/60174020027?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(url, "_blank", "noopener");
     setSent(true);
   };
 
@@ -23,8 +40,8 @@ export default function BookingForm({ genre, pkg }: { genre: string; pkg?: strin
           Thank you — <em>talk soon.</em>
         </p>
         <p className="muted" style={{ marginTop: 24, maxWidth: "40ch" }}>
-          Your enquiry is in. I personally reply to every message within 24 hours with availability
-          and next steps.
+          WhatsApp should have opened with your details ready to send — just press send. I
+          personally reply to every message within 24 hours with availability and next steps.
         </p>
       </div>
     );

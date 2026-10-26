@@ -32,11 +32,11 @@ export default async function BookPage({ searchParams }: Props) {
             <ul className="contact-list">
               <li>
                 <span className="eyebrow muted">Email</span>
-                <a href="mailto:hello@adamatasjalan.com">hello@adamatasjalan.com</a>
+                <a href="mailto:AdamRazali54@gmail.com">AdamRazali54@gmail.com</a>
               </li>
               <li>
                 <span className="eyebrow muted">WhatsApp</span>
-                <a href="https://wa.me/60000000000">+60 00-000 0000</a>
+                <a href="https://wa.me/60174020027">+60 17-402 0027</a>
               </li>
               <li>
                 <span className="eyebrow muted">Studio</span>
