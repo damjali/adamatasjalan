@@ -46,7 +46,7 @@ export default async function GenrePage({ params }: Props) {
         </div>
 
         <GenreHero
-          shots={content.projects.flatMap((p) => p.shots.map((s) => ({ src: s.src, name: p.name })))}
+          shots={content.projects.flatMap((p) => p.shots.map((s) => ({ src: s.src, name: p.name, w: s.w, h: s.h })))}
         />
         <div className="container">
           <div className="genre-meta">
