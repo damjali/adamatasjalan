@@ -131,7 +131,15 @@ button {
   align-items: center;
   padding: 26px var(--gutter);
   color: #fff;
-  mix-blend-mode: difference;
+}
+/* Black fade behind the nav so it stays readable over any photo */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -36px 0;
+  z-index: -1;
+  background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.55) 55%, transparent);
+  pointer-events: none;
 }
 .header.hidden {
   transform: translateY(-110%);
