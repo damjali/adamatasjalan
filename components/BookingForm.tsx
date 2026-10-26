@@ -18,12 +18,12 @@ export default function BookingForm({ genre, pkg }: { genre: string; pkg?: strin
       "",
       `*Name:* ${get("name")}`,
       `*Email:* ${get("email")}`,
-      get("phone") && `*Phone / WhatsApp:* ${get("phone")}`,
+      get("phone") ? `*Phone / WhatsApp:* ${get("phone")}` : false,
       `*Event date:* ${get("date")}`,
       `*Type of shoot:* ${genreTitle}`,
       `*Package:* ${get("package")}`,
-      get("location") && `*Location:* ${get("location")}`,
-      get("message") && `*Details:* ${get("message")}`,
+      get("location") ? `*Location:* ${get("location")}` : false,
+      get("message") ? `*Details:* ${get("message")}` : false,
     ].filter((l): l is string => l !== false);
     const url = `https://wa.me/60174020027?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener");
