@@ -181,39 +181,23 @@ button {
   transform-origin: left;
 }
 .brand {
-  position: relative;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.5em;
-  padding-bottom: 6px;
-  font-family: var(--font-serif), serif;
-  font-size: 22px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.2em;
-  white-space: nowrap;
+  display: block;
+  line-height: 0;
 }
-.brand em {
-  font-size: 0.9em;
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.04em;
-  opacity: 0.7;
-}
-/* Thin line beneath, the "road" */
-.brand::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0.2em;
-  bottom: 0;
-  height: 1px;
+/* The logo is an SVG used as a mask, so it takes the current text colour */
+.logo-mark {
+  display: block;
+  aspect-ratio: 505 / 245;
   background: currentColor;
-  opacity: 0.35;
+  -webkit-mask: url("/logo.svg") center / contain no-repeat;
+  mask: url("/logo.svg") center / contain no-repeat;
+}
+.brand .logo-mark {
+  width: 96px;
 }
 @media (max-width: 560px) {
-  .brand {
-    font-size: 17px;
+  .brand .logo-mark {
+    width: 80px;
   }
 }
 .menu-btn {
@@ -621,11 +605,11 @@ button {
   opacity: 1;
 }
 .footer-big {
-  font-size: clamp(56px, 13.5vw, 230px);
-  white-space: nowrap;
-  line-height: 0.8;
   border-top: 1px solid var(--line-dark);
-  padding-top: 40px;
+  padding-top: 48px;
+}
+.footer-big .logo-mark {
+  width: clamp(240px, 46vw, 640px);
 }
 .footer-base {
   display: flex;

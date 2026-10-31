@@ -45,8 +45,8 @@ export default async function Footer() {
           </ul>
         </div>
       </div>
-      <div className="footer-big serif">
-        {c.e("footer_name")}
+      <div className="footer-big">
+        <span className="logo-mark" role="img" aria-label="adam atas jalan" />
       </div>
       <div className="footer-base">
         <span>{c.e("footer_copyright", { year: String(new Date().getFullYear()) })}</span>

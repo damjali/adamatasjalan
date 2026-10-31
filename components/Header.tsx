@@ -60,17 +60,7 @@ export default function Header({ genres, text }: { genres: Genre[]; text: Record
           {leftLinks.map(link)}
         </nav>
         <Link href="/" className="brand" aria-label="Home">
-          <E k="logo_1" raw={text.logo_1}>
-            {text.logo_1}
-          </E>
-          <em>
-            <E k="logo_2" raw={text.logo_2}>
-              {text.logo_2}
-            </E>
-          </em>
-          <E k="logo_3" raw={text.logo_3}>
-            {text.logo_3}
-          </E>
+          <span className="logo-mark" role="img" aria-label="adam atas jalan" />
         </Link>
         <nav className="nav right" aria-label="Genres">
           {rightLinks.map(link)}
