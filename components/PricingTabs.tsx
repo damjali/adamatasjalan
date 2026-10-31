@@ -2,17 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { genres, type Tier } from "@/lib/data";
+import type { Genre, Tier } from "@/lib/data";
 import type { PriceText } from "@/lib/sheet";
 
 export default function PricingTabs({
   initial,
   pricing,
   text,
+  genres,
 }: {
   initial: string;
   pricing: Record<string, Tier[]>;
   text: PriceText;
+  genres: Genre[];
 }) {
   const [active, setActive] = useState(initial);
 

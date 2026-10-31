@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Gallery from "@/components/Gallery";
 import GenreHero from "@/components/GenreHero";
 import { Reveal, RevealLines } from "@/components/Reveal";
-import { genres, getGenre } from "@/lib/data";
+import { getContent } from "@/lib/content";
 import { getPriceData } from "@/lib/sheet";
 import { getPortfolio } from "@/lib/portfolio";
 
@@ -14,12 +14,15 @@ export const dynamic = "force-dynamic";
 type Props = { params: Promise<{ genre: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const g = getGenre((await params).genre);
+  const [{ genres }, { genre: slug }] = await Promise.all([getContent(), params]);
+  const g = genres.find((x) => x.slug === slug);
   return { title: g?.title ?? "Work" };
 }
 
 export default async function GenrePage({ params }: Props) {
-  const genre = getGenre((await params).genre);
+  const [c, { genre: slug }] = await Promise.all([getContent(), params]);
+  const { genres } = c;
+  const genre = genres.find((x) => x.slug === slug);
   if (!genre) notFound();
 
   const portfolio = await getPortfolio();
@@ -36,7 +39,7 @@ export default async function GenrePage({ params }: Props) {
             <div>
               <Reveal>
                 <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-                  ( 0{i + 1} — Portfolio )
+                  {c.t("work_eyebrow").replace("{n}", String(i + 1))}
                 </p>
               </Reveal>
               <RevealLines className="serif display" lines={[<em key="t">{genre.title}</em>]} />
@@ -50,8 +53,8 @@ export default async function GenrePage({ params }: Props) {
         <div className="container">
           <div className="genre-meta">
             <div>
-              <span className="eyebrow muted">Services</span>
-              <span>Photography · Videography</span>
+              <span className="eyebrow muted">{c.t("work_services_label")}</span>
+              <span>{c.t("work_services_value")}</span>
             </div>
             <div>
               <span className="eyebrow muted">{text.from_label}</span>
@@ -61,7 +64,7 @@ export default async function GenrePage({ params }: Props) {
                 className="btn"
                 style={{ justifySelf: "start", marginTop: 10 }}
               >
-                View {genre.label} price list →
+                {c.t("work_price_button").replace("{category}", genre.label)}
               </Link>
             </div>
           </div>
@@ -70,7 +73,7 @@ export default async function GenrePage({ params }: Props) {
         <div className="section container" style={{ paddingTop: "clamp(32px, 5vw, 64px)" }}>
           {content.projects.length === 0 && (
             <p className="eyebrow muted" style={{ textAlign: "center" }}>
-              New work coming soon.
+              {c.t("work_empty")}
             </p>
           )}
 
@@ -79,9 +82,19 @@ export default async function GenrePage({ params }: Props) {
               <div className="project-head">
                 <span className="eyebrow muted">{String(n + 1).padStart(2, "0")}</span>
                 <h2 className="serif h2">{project.name}</h2>
-                <span className="eyebrow muted">{project.shots.length} {project.shots.length === 1 ? "photo" : "photos"}</span>
+                <span className="eyebrow muted">{project.shots.length === 1
+                    ? c.t("work_photos_one")
+                    : c.t("work_photos_many").replace("{n}", String(project.shots.length))}</span>
               </div>
-              <Gallery shots={project.shots} />
+              <Gallery
+                shots={project.shots}
+                text={{
+                  close: c.t("lightbox_close"),
+                  prev: c.t("lightbox_prev"),
+                  next: c.t("lightbox_next"),
+                  watermark: c.t("watermark"),
+                }}
+              />
             </div>
           ))}
         </div>

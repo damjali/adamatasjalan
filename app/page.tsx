@@ -4,22 +4,23 @@ import Statement from "@/components/home/Statement";
 import GenreIndex from "@/components/home/GenreIndex";
 import HorizontalGallery from "@/components/home/HorizontalGallery";
 import { Reveal, RevealLines } from "@/components/Reveal";
+import { getContent } from "@/lib/content";
+import { rich, richLines } from "@/lib/rich";
 
 // Always rendered on request so photos added to Drive show up straight away.
 export const dynamic = "force-dynamic";
 
-const marquee = (
-  <>
-    <span>Now booking 2026 &amp; 2027</span>
-    <span>—</span>
-    <span>
-      <em>Photo</em> &amp; <em>Film</em>
-    </span>
-    <span>—</span>
-  </>
-);
-
 export default async function Home() {
+  const c = await getContent();
+  const marquee = (
+    <>
+      <span>{rich(c.t("marquee_1"))}</span>
+      <span>—</span>
+      <span>{rich(c.t("marquee_2"))}</span>
+      <span>—</span>
+    </>
+  );
+
   return (
     <>
       <Hero src="/adam.webp" />
@@ -38,35 +39,27 @@ export default async function Home() {
       <section className="section light container">
         <div className="quote">
           <Reveal>
-            <p className="eyebrow muted">( Kind Words )</p>
+            <p className="eyebrow muted">{c.t("quote_label")}</p>
           </Reveal>
           <Reveal>
-            <blockquote className="serif">
-              &ldquo;We barely noticed he was there — then the photos arrived and we cried all over
-              again. <em>Every single moment</em> was in there.&rdquo;
-            </blockquote>
+            <blockquote className="serif">{rich(c.t("quote_text"))}</blockquote>
           </Reveal>
           <Reveal>
-            <p className="eyebrow">Aina &amp; Haziq — Wedding, Kuala Lumpur</p>
+            <p className="eyebrow">{c.t("quote_author")}</p>
           </Reveal>
         </div>
       </section>
 
       <section className="section dark container">
         <div className="cta">
-          <p className="eyebrow muted">( Let&apos;s work together )</p>
+          <p className="eyebrow muted">{c.t("home_cta_label")}</p>
           <RevealLines
             className="serif h1"
-            lines={[
-              <>Let&apos;s make</>,
-              <>
-                something <em>timeless.</em>
-              </>,
-            ]}
+            lines={richLines(c.t("home_cta_title"))}
           />
           <Reveal>
             <Link href="/book" className="btn">
-              Book your date →
+              {c.t("home_cta_button")}
             </Link>
           </Reveal>
         </div>

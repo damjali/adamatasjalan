@@ -1,17 +1,20 @@
 import Link from "next/link";
-import { genres } from "@/lib/data";
+import { getContent } from "@/lib/content";
+import { rich } from "@/lib/rich";
 
-export default function Footer() {
+export default async function Footer() {
+  const c = await getContent();
+  const { genres } = c;
   return (
     <footer className="footer">
       <div className="footer-grid">
         <div>
           <p className="serif h3" style={{ maxWidth: "14ch", lineHeight: 1.1 }}>
-            Photography &amp; film for the moments worth <em>keeping.</em>
+            {rich(c.t("footer_tagline"))}
           </p>
         </div>
         <div>
-          <h4 className="eyebrow">Work</h4>
+          <h4 className="eyebrow">{c.t("footer_work")}</h4>
           <ul>
             {genres.map((g) => (
               <li key={g.slug}>
@@ -21,29 +24,29 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="eyebrow">Studio</h4>
+          <h4 className="eyebrow">{c.t("footer_studio")}</h4>
           <ul>
-            <li><Link href="/pricing">Price List</Link></li>
-            <li><Link href="/about">About Me</Link></li>
-            <li><Link href="/book">Book Now</Link></li>
+            <li><Link href="/pricing">{c.t("nav_pricing")}</Link></li>
+            <li><Link href="/about">{c.t("nav_about")}</Link></li>
+            <li><Link href="/book">{c.t("nav_book")}</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="eyebrow">Say hello</h4>
+          <h4 className="eyebrow">{c.t("footer_hello")}</h4>
           <ul>
-            <li><a href="mailto:AdamRazali54@gmail.com">AdamRazali54@gmail.com</a></li>
-            <li><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></li>
-            <li><a href="https://tiktok.com" target="_blank" rel="noreferrer">TikTok</a></li>
-            <li><a href="https://wa.me/60000000000" target="_blank" rel="noreferrer">WhatsApp</a></li>
+            <li><a href={`mailto:${c.t("contact_email")}`}>{c.t("contact_email")}</a></li>
+            <li><a href={c.t("instagram_url")} target="_blank" rel="noreferrer">Instagram</a></li>
+            <li><a href={c.t("tiktok_url")} target="_blank" rel="noreferrer">TikTok</a></li>
+            <li><a href={`https://wa.me/${c.t("contact_whatsapp")}`} target="_blank" rel="noreferrer">{c.t("footer_whatsapp")}</a></li>
           </ul>
         </div>
       </div>
       <div className="footer-big serif">
-        Adam <em>atas</em> Jalan
+        {rich(c.t("footer_name"))}
       </div>
       <div className="footer-base">
-        <span>© {new Date().getFullYear()} Adam Atas Jalan. All rights reserved.</span>
-        <span>Based in Kuala Lumpur — available worldwide</span>
+        <span>{c.t("footer_copyright").replace("{year}", String(new Date().getFullYear()))}</span>
+        <span>{c.t("footer_note")}</span>
       </div>
     </footer>
   );

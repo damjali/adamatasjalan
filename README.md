@@ -61,3 +61,13 @@ Tabs (names matter, first row is the header, row order is display order):
 Featured for the highlighted "Most loved" card. Ready-made starting data is in `sheet-seed/`
 (File → Import → Upload → "Insert new sheet(s)", once per CSV). The sheet ID can be overridden
 with `GOOGLE_SHEET_ID`.
+
+## Site wording (Google Sheet)
+
+All other text on the site (titles, biography, footer, contact details, form labels, menu, the About
+numbers/process/gear lists, category names) comes from a second Google Sheet whose name contains
+"Content", in the same root Drive folder. Tabs: `Content` (Key / Value / Where it appears), `Genres`
+(Slug / Label / Title), `Stats` (Value / Suffix / Label), `Process` (Title / Text), `Gear` (Item).
+Use `*word*` for italics and `|` for a line break in headings. Missing keys or tabs fall back to the
+defaults in `lib/content.ts`. Starting data: `sheet-seed/SiteContent.xlsx` (upload to Drive, then
+Open with Google Sheets, File, Save as Google Sheets). Override with `GOOGLE_CONTENT_SHEET_ID`.

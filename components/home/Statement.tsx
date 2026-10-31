@@ -1,11 +1,14 @@
-export default function Statement() {
+import { getContent } from "@/lib/content";
+import { rich } from "@/lib/rich";
+
+export default async function Statement() {
+  const c = await getContent();
   return (
     <section className="section light container">
       <div className="split">
-        <p className="eyebrow">( Approach )</p>
+        <p className="eyebrow">{c.t("statement_label")}</p>
         <p className="serif statement">
-          I don&apos;t direct moments — I wait for them. Honest frames and quiet films for the days
-          you&apos;ll want to live twice.
+          {rich(c.t("statement_text"))}
         </p>
       </div>
     </section>

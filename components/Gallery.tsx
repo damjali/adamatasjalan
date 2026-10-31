@@ -4,6 +4,9 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Shot } from "@/lib/data";
+import { rich } from "@/lib/rich";
+
+export type GalleryText = { close: string; prev: string; next: string; watermark: string };
 
 // Justified rows: every photo keeps its own aspect ratio (portraits stay tall, landscapes
 // stay wide, nothing is cropped) and each row is scaled to fill the full width, so no gaps.
@@ -39,7 +42,7 @@ function partition(aspects: number[], width: number, gap: number): number[][] {
   return rows;
 }
 
-export default function Gallery({ shots }: { shots: Shot[] }) {
+export default function Gallery({ shots, text }: { shots: Shot[]; text: GalleryText }) {
   const [index, setIndex] = useState<number | null>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(390);
@@ -127,7 +130,7 @@ export default function Gallery({ shots }: { shots: Shot[] }) {
                 {String(index + 1).padStart(2, "0")} / {String(shots.length).padStart(2, "0")}
               </span>
               <button className="eyebrow nav-link" onClick={() => setIndex(null)}>
-                Close ✕
+                {text.close}
               </button>
             </div>
             <div className="lightbox-stage">
@@ -135,16 +138,16 @@ export default function Gallery({ shots }: { shots: Shot[] }) {
                 <Image src={shots[index].src} alt={shots[index].alt} fill sizes="100vw" />
               </div>
               <span className="watermark" aria-hidden>
-                @adam<em>atas</em>jalan
+                {rich(text.watermark)}
               </span>
             </div>
             <div className="lightbox-bottom" onClick={(e) => e.stopPropagation()}>
               <button className="eyebrow nav-link" onClick={() => go(-1)}>
-                ← Prev
+                {text.prev}
               </button>
               <span className="eyebrow muted">{shots[index].alt}</span>
               <button className="eyebrow nav-link" onClick={() => go(1)}>
-                Next →
+                {text.next}
               </button>
             </div>
           </div>,

@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { genres } from "@/lib/data";
+import type { Genre } from "@/lib/data";
 
-const leftLinks = [
-  { href: "/pricing", label: "Price List" },
-  { href: "/about", label: "About Me" },
-  { href: "/book", label: "Book Now" },
-];
+export default function Header({ genres, text }: { genres: Genre[]; text: Record<string, string> }) {
+  const leftLinks = [
+    { href: "/pricing", label: text.nav_pricing },
+    { href: "/about", label: text.nav_about },
+    { href: "/book", label: text.nav_book },
+  ];
+  const rightLinks = genres.map((g) => ({ href: `/work/${g.slug}`, label: g.label }));
 
-const rightLinks = genres.map((g) => ({ href: `/work/${g.slug}`, label: g.label }));
-
-export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -58,23 +57,23 @@ export default function Header() {
           {leftLinks.map(link)}
         </nav>
         <Link href="/" className="brand" aria-label="Home">
-          <span>adam</span>
-          <em>atas</em>
-          <span>jalan</span>
+          <span>{text.logo_1}</span>
+          <em>{text.logo_2}</em>
+          <span>{text.logo_3}</span>
         </Link>
         <nav className="nav right" aria-label="Genres">
           {rightLinks.map(link)}
         </nav>
         <button className="menu-btn" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-          {open ? "Close" : "Menu"}
+          {open ? text.menu_close : text.menu_open}
         </button>
       </header>
 
       {open && (
         <div className="mobile-menu">
           {[
-            { title: "Work", items: rightLinks },
-            { title: "Studio", items: leftLinks },
+            { title: text.menu_work, items: rightLinks },
+            { title: text.menu_studio, items: leftLinks },
           ].map((group) => (
             <div key={group.title}>
               <p className="eyebrow muted" style={{ marginBottom: 12 }}>

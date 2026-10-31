@@ -1,16 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { genres } from "@/lib/data";
+import { getContent } from "@/lib/content";
 import { getPortfolio } from "@/lib/portfolio";
 
 export default async function GenreIndex() {
   const portfolio = await getPortfolio();
+  const c = await getContent();
+  const { genres } = c;
 
   return (
     <section className="section light container" style={{ paddingTop: 0 }}>
       <div className="flex-between" style={{ marginBottom: 48 }}>
-        <p className="eyebrow">( Selected Work )</p>
-        <p className="eyebrow muted">05 Disciplines</p>
+        <p className="eyebrow">{c.t("selected_label")}</p>
+        <p className="eyebrow muted">{c.t("selected_count")}</p>
       </div>
 
       <ul className="genre-list">
@@ -24,7 +26,7 @@ export default async function GenreIndex() {
                 <span className="thumb">
                   {cover && <Image src={cover.src} alt="" fill sizes="90px" style={{ objectFit: "cover" }} />}
                 </span>
-                <span className="eyebrow arrow">View →</span>
+                <span className="eyebrow arrow">{c.t("selected_view")}</span>
               </Link>
             </li>
           );

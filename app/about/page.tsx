@@ -3,33 +3,16 @@ import Link from "next/link";
 import Counter from "@/components/Counter";
 import ParallaxImage from "@/components/ParallaxImage";
 import { Reveal, RevealLines } from "@/components/Reveal";
+import { getContent } from "@/lib/content";
+import { rich, richLines } from "@/lib/rich";
 
-export const metadata: Metadata = { title: "About Me" };
-
-const stats = [
-  { value: 8, suffix: "+", label: "Years behind the lens" },
-  { value: 240, suffix: "+", label: "Weddings & events" },
-  { value: 1200, suffix: "+", label: "Graduates celebrated" },
-  { value: 15, suffix: "", label: "Countries shot in" },
-];
-
-const steps = [
-  { title: "Enquire", text: "Tell me about your day, your vision and the moments that matter most." },
-  { title: "Plan", text: "A call to map timelines, locations and the shots you can't live without." },
-  { title: "Shoot", text: "I blend in, guide when needed, and let the real moments happen." },
-  { title: "Deliver", text: "A carefully edited gallery and film, ready to share and keep forever." },
-];
-
-const gear = [
-  "Sony A1 & A7S III",
-  "24–70mm f/2.8 GM II",
-  "70–200mm f/2.8 GM II",
-  "35mm & 85mm f/1.4 primes",
-  "DJI Mavic 3 Pro",
-  "DJI RS 4 Pro gimbal",
-];
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getContent()).t("about_meta_title") };
+}
 
 export default async function AboutPage() {
+  const c = await getContent();
+  const { stats, steps, gear } = c;
   const portrait = "/adam.webp";
 
   return (
@@ -38,41 +21,34 @@ export default async function AboutPage() {
         <div className="page-head">
           <Reveal>
             <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-              ( About Me )
+              {c.t("about_label")}
             </p>
           </Reveal>
           <RevealLines
             className="serif h1"
-            lines={[<>The person</>, <>behind the <em>frame</em></>]}
+            lines={richLines(c.t("about_title"))}
           />
         </div>
 
         <div className="container section" style={{ paddingTop: 0 }}>
           <div className="about-grid">
             <div className="portrait">
-              <ParallaxImage src={portrait} alt="Portrait of Adam" priority />
+              <ParallaxImage src={portrait} alt={c.t("about_photo_alt")} priority />
             </div>
             <Reveal className="prose">
               <p className="serif h3" style={{ lineHeight: 1.2, marginBottom: 40 }}>
-                Hi, I&apos;m Adam — a photographer and filmmaker based in Kuala Lumpur, usually found
-                somewhere <em>atas jalan</em>: on the road.
+                {rich(c.t("about_lead"))}
               </p>
-              <p className="muted">
-                What started as borrowing my father&apos;s camera for a cousin&apos;s wedding turned into a
-                lifelong obsession with light and timing. Today I photograph convocations, weddings,
-                athletes, portraits and events across Malaysia and beyond.
-              </p>
-              <p className="muted">
-                My style is quiet and documentary: I&apos;d rather catch a real laugh than ask for a fake
-                one. Clean, timeless edits that look as good in twenty years as they do today.
-              </p>
-              <p className="muted">
-                When I&apos;m not shooting, I&apos;m chasing sunrises with a film camera, or on a long drive
-                with no particular destination.
-              </p>
+              {["about_p1", "about_p2", "about_p3"].map(
+                (k) => c.t(k) && (
+                  <p className="muted" key={k}>
+                    {rich(c.t(k))}
+                  </p>
+                )
+              )}
               <div style={{ marginTop: 48 }}>
                 <Link href="/book" className="btn solid">
-                  Work with me →
+                  {c.t("about_button")}
                 </Link>
               </div>
             </Reveal>
@@ -82,7 +58,7 @@ export default async function AboutPage() {
 
       <section className="section dark container">
         <p className="eyebrow muted" style={{ marginBottom: 40 }}>
-          ( By the numbers )
+          {c.t("stats_label")}
         </p>
         <div className="stats">
           {stats.map((s) => (
@@ -101,8 +77,8 @@ export default async function AboutPage() {
 
       <section className="section light container">
         <div className="flex-between" style={{ marginBottom: 64 }}>
-          <RevealLines className="serif h2" lines={[<>How we&apos;ll</>, <em key="w">work together</em>]} />
-          <p className="eyebrow muted">( Process )</p>
+          <RevealLines className="serif h2" lines={richLines(c.t("process_title"))} />
+          <p className="eyebrow muted">{c.t("process_label")}</p>
         </div>
         <div className="steps">
           {steps.map((s, i) => (
@@ -117,7 +93,7 @@ export default async function AboutPage() {
 
       <section className="section light container" style={{ paddingTop: 0 }}>
         <div className="split">
-          <p className="eyebrow">( In the bag )</p>
+          <p className="eyebrow">{c.t("gear_label")}</p>
           <Reveal>
             <ul className="rows">
               {gear.map((g, i) => (

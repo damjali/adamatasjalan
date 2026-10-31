@@ -1,18 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { genres, type Tier } from "@/lib/data";
+import type { Genre, Tier } from "@/lib/data";
+import { rich } from "@/lib/rich";
 
 export default function BookingForm({
   genre,
   pkg,
   pricing,
   currency,
+  genres,
+  text,
 }: {
   genre: string;
   pkg?: string;
   pricing: Record<string, Tier[]>;
   currency: string;
+  genres: Genre[];
+  text: Record<string, string>;
 }) {
   const [selected, setSelected] = useState(genre);
   const [sent, setSent] = useState(false);
@@ -24,18 +29,18 @@ export default function BookingForm({
     const get = (k: string) => String(f.get(k) ?? "").trim();
     const genreTitle = genres.find((g) => g.slug === get("genre"))?.title ?? get("genre");
     const lines = [
-      "Hi Adam, I'd like to enquire about a booking.",
+      text.wa_intro,
       "",
-      `*Name:* ${get("name")}`,
-      `*Email:* ${get("email")}`,
-      get("phone") ? `*Phone / WhatsApp:* ${get("phone")}` : false,
-      `*Event date:* ${get("date")}`,
-      `*Type of shoot:* ${genreTitle}`,
-      `*Package:* ${get("package")}`,
-      get("location") ? `*Location:* ${get("location")}` : false,
-      get("message") ? `*Details:* ${get("message")}` : false,
+      `*${text.form_name}:* ${get("name")}`,
+      `*${text.form_email}:* ${get("email")}`,
+      get("phone") ? `*${text.form_phone}:* ${get("phone")}` : false,
+      `*${text.form_date}:* ${get("date")}`,
+      `*${text.form_genre}:* ${genreTitle}`,
+      `*${text.form_package}:* ${get("package")}`,
+      get("location") ? `*${text.form_location}:* ${get("location")}` : false,
+      get("message") ? `*${text.form_message}:* ${get("message")}` : false,
     ].filter((l): l is string => l !== false);
-    const url = `https://wa.me/60174020027?text=${encodeURIComponent(lines.join("\n"))}`;
+    const url = `https://wa.me/${text.contact_whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener");
     setSent(true);
   };
@@ -44,14 +49,13 @@ export default function BookingForm({
     return (
       <div>
         <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-          ( Received )
+          {text.thanks_label}
         </p>
         <p className="serif h2">
-          Thank you — <em>talk soon.</em>
+          {rich(text.thanks_title)}
         </p>
         <p className="muted" style={{ marginTop: 24, maxWidth: "40ch" }}>
-          WhatsApp should have opened with your details ready to send — just press send. I
-          personally reply to every message within 24 hours with availability and next steps.
+          {text.thanks_text}
         </p>
       </div>
     );
@@ -60,23 +64,23 @@ export default function BookingForm({
   return (
     <form className="form" onSubmit={onSubmit}>
       <div className="field">
-        <label className="eyebrow" htmlFor="name">Full name</label>
+        <label className="eyebrow" htmlFor="name">{text.form_name}</label>
         <input id="name" name="name" required autoComplete="name" />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="email">Email</label>
+        <label className="eyebrow" htmlFor="email">{text.form_email}</label>
         <input id="email" name="email" type="email" required autoComplete="email" />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="phone">Phone / WhatsApp</label>
+        <label className="eyebrow" htmlFor="phone">{text.form_phone}</label>
         <input id="phone" name="phone" type="tel" autoComplete="tel" />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="date">Event date</label>
+        <label className="eyebrow" htmlFor="date">{text.form_date}</label>
         <input id="date" name="date" type="date" required />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="genre">Type of shoot</label>
+        <label className="eyebrow" htmlFor="genre">{text.form_genre}</label>
         <select id="genre" name="genre" value={selected} onChange={(e) => setSelected(e.target.value)}>
           {genres.map((g) => (
             <option key={g.slug} value={g.slug}>{g.title}</option>
@@ -84,27 +88,27 @@ export default function BookingForm({
         </select>
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="package">Package</label>
+        <label className="eyebrow" htmlFor="package">{text.form_package}</label>
         <select id="package" name="package" key={selected} defaultValue={pkg}>
           {pricing[selected].map((t) => (
             <option key={t.name} value={t.name}>
               {t.name} — {currency} {t.price.toLocaleString()}
             </option>
           ))}
-          <option value="custom">Something custom</option>
+          <option value="custom">{text.form_custom}</option>
         </select>
       </div>
       <div className="field full">
-        <label className="eyebrow" htmlFor="location">Location</label>
-        <input id="location" name="location" placeholder="Venue, city" />
+        <label className="eyebrow" htmlFor="location">{text.form_location}</label>
+        <input id="location" name="location" placeholder={text.form_location_hint} />
       </div>
       <div className="field full">
-        <label className="eyebrow" htmlFor="message">Tell me about it</label>
-        <textarea id="message" name="message" placeholder="The story, the vibe, anything I should know…" />
+        <label className="eyebrow" htmlFor="message">{text.form_message}</label>
+        <textarea id="message" name="message" placeholder={text.form_message_hint} />
       </div>
       <div className="field full">
         <button type="submit" className="btn" style={{ justifySelf: "start" }}>
-          Send enquiry →
+          {text.form_submit}
         </button>
       </div>
     </form>

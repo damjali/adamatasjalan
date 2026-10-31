@@ -3,16 +3,18 @@ import Link from "next/link";
 import Faq from "@/components/Faq";
 import PricingTabs from "@/components/PricingTabs";
 import { Reveal, RevealLines } from "@/components/Reveal";
-import { genres } from "@/lib/data";
+import { getContent } from "@/lib/content";
 import { getPriceData } from "@/lib/sheet";
 
-export const metadata: Metadata = { title: "Price List" };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getContent()).t("nav_pricing") };
+}
 
 type Props = { searchParams: Promise<{ genre?: string }> };
 
 export default async function PricingPage({ searchParams }: Props) {
   const { genre } = await searchParams;
-  const { pricing, addOns, faqs, text } = await getPriceData();
+  const [{ pricing, addOns, faqs, text }, { genres }] = await Promise.all([getPriceData(), getContent()]);
   const initial = genres.some((g) => g.slug === genre) ? genre! : genres[0].slug;
 
   return (
@@ -30,7 +32,7 @@ export default async function PricingPage({ searchParams }: Props) {
         </div>
       </div>
 
-      <PricingTabs initial={initial} pricing={pricing} text={text} />
+      <PricingTabs initial={initial} pricing={pricing} text={text} genres={genres} />
 
       <section className="section container" style={{ paddingTop: 0 }}>
         <div className="split">
