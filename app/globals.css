@@ -188,9 +188,31 @@ button {
 .logo-mark {
   display: block;
   aspect-ratio: 505 / 245;
-  background: currentColor;
+  /* a thin gold highlight sits off to the side until hover sweeps it across */
+  background: linear-gradient(105deg, currentColor 0 40%, #d9a85a 50%, currentColor 60% 100%) 100% 0 / 280% 100%;
   -webkit-mask: url("/logo.svg") center / contain no-repeat;
   mask: url("/logo.svg") center / contain no-repeat;
+  transition: transform 0.5s var(--ease-out);
+}
+.brand:hover .logo-mark,
+.footer-big .logo-mark:hover {
+  transform: translateY(-2px) scale(1.05);
+  animation: logo-shine 1s ease;
+}
+@keyframes logo-shine {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand:hover .logo-mark,
+  .footer-big .logo-mark:hover {
+    animation: none;
+    transform: none;
+  }
 }
 .brand .logo-mark {
   width: 96px;
