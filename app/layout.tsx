@@ -3,6 +3,7 @@ import { getContent } from "@/lib/content";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AdminEditor from "@/components/AdminEditor";
 import "./globals.css";
 
 const serif = Cormorant_Garamond({
@@ -33,6 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Header genres={c.genres} text={c.all} />
         <main>{children}</main>
         <Footer />
+        <AdminEditor />
       </body>
     </html>
   );

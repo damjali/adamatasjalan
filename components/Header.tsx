@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { E } from "@/components/E";
 import type { Genre } from "@/lib/data";
 
 export default function Header({ genres, text }: { genres: Genre[]; text: Record<string, string> }) {
   const leftLinks = [
-    { href: "/pricing", label: text.nav_pricing },
-    { href: "/about", label: text.nav_about },
-    { href: "/book", label: text.nav_book },
+    { href: "/pricing", label: text.nav_pricing, key: "nav_pricing" },
+    { href: "/about", label: text.nav_about, key: "nav_about" },
+    { href: "/book", label: text.nav_book, key: "nav_book" },
   ];
-  const rightLinks = genres.map((g) => ({ href: `/work/${g.slug}`, label: g.label }));
+  const rightLinks = genres.map((g) => ({ href: `/work/${g.slug}`, label: g.label, key: `genre.${g.slug}.label` }));
 
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -40,13 +41,15 @@ export default function Header({ genres, text }: { genres: Genre[]; text: Record
     };
   }, [open]);
 
-  const link = (l: { href: string; label: string }) => (
+  const link = (l: { href: string; label: string; key: string }) => (
     <Link
       key={l.href}
       href={l.href}
       className={`nav-link${pathname === l.href ? " active" : ""}`}
     >
-      {l.label}
+      <E k={l.key} raw={l.label}>
+        {l.label}
+      </E>
     </Link>
   );
 
@@ -57,9 +60,17 @@ export default function Header({ genres, text }: { genres: Genre[]; text: Record
           {leftLinks.map(link)}
         </nav>
         <Link href="/" className="brand" aria-label="Home">
-          <span>{text.logo_1}</span>
-          <em>{text.logo_2}</em>
-          <span>{text.logo_3}</span>
+          <E k="logo_1" raw={text.logo_1}>
+            {text.logo_1}
+          </E>
+          <em>
+            <E k="logo_2" raw={text.logo_2}>
+              {text.logo_2}
+            </E>
+          </em>
+          <E k="logo_3" raw={text.logo_3}>
+            {text.logo_3}
+          </E>
         </Link>
         <nav className="nav right" aria-label="Genres">
           {rightLinks.map(link)}
@@ -82,7 +93,11 @@ export default function Header({ genres, text }: { genres: Genre[]; text: Record
               <ul>
                 {group.items.map((l) => (
                   <li key={l.href}>
-                    <Link href={l.href}>{l.label}</Link>
+                    <Link href={l.href}>
+                      <E k={l.key} raw={l.label}>
+                        {l.label}
+                      </E>
+                    </Link>
                   </li>
                 ))}
               </ul>

@@ -41,33 +41,21 @@ Portfolio/                    <- the root folder you share
 
 Until both are set the site shows placeholder photos.
 
-## Price list (Google Sheet)
+## Editing the site's text (admin)
 
-Packages, add-ons, FAQ and the wording on the Price List page come from a Google Sheet in the
-portfolio Drive folder (shared as **Anyone with the link → Viewer**). Edit a cell and the site
-updates within about a minute; responses are cached so pages open instantly, and the built-in
-defaults in `lib/data.ts` are used if the sheet is unreachable.
+Every text on the site (titles, biography, prices, packages, FAQ, contact details, menu and form
+labels) is stored in the Supabase table `site_texts` and read from there. Defaults live in
+`lib/content.tsx`; anything missing from the table falls back to them.
 
-Tabs (names matter, first row is the header, row order is display order):
+One-time setup:
 
-| Tab | Columns |
-| --- | --- |
-| Packages | Category · Name · Price · Duration · Featured · Feature 1 … Feature 8 |
-| Add-ons | Name · Price |
-| FAQ | Question · Answer |
-| Settings | Key · Value (button and heading wording; `{name}` in `book_button` becomes the package name) |
+1. In Supabase open **SQL Editor** and run `supabase/site_texts.sql` (creates the table).
+2. Set these environment variables locally in `.env` and on Vercel:
+   `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`
+   (optional: `ADMIN_SESSION_SECRET`).
 
-`Category` is one of `convocation`, `weddings`, `sports`, `portraits`, `events`. Put `yes` under
-Featured for the highlighted "Most loved" card. Ready-made starting data is in `sheet-seed/`
-(File → Import → Upload → "Insert new sheet(s)", once per CSV). The sheet ID can be overridden
-with `GOOGLE_SHEET_ID`.
+Then use the small **Login as admin** link at the bottom of any page. While logged in, click any text
+on the page, type, and click away (or press Enter) to save. `/admin` lists every text, including
+links, descriptions and hidden ones. In text, `*word*` is italic and `|` starts a new line in
+headings. The first login copies all default texts into Supabase.
 
-## Site wording (Google Sheet)
-
-All other text on the site (titles, biography, footer, contact details, form labels, menu, the About
-numbers/process/gear lists, category names) comes from a second Google Sheet whose name contains
-"Content", in the same root Drive folder. Tabs: `Content` (Key / Value / Where it appears), `Genres`
-(Slug / Label / Title), `Stats` (Value / Suffix / Label), `Process` (Title / Text), `Gear` (Item).
-Use `*word*` for italics and `|` for a line break in headings. Missing keys or tabs fall back to the
-defaults in `lib/content.ts`. Starting data: `sheet-seed/SiteContent.xlsx` (upload to Drive, then
-Open with Google Sheets, File, Save as Google Sheets). Override with `GOOGLE_CONTENT_SHEET_ID`.

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Genre, Tier } from "@/lib/data";
+import { E } from "@/components/E";
 import { rich } from "@/lib/rich";
 
 export default function BookingForm({
@@ -20,6 +21,11 @@ export default function BookingForm({
   text: Record<string, string>;
 }) {
   const [selected, setSelected] = useState(genre);
+  const ed = (key: string) => (
+    <E k={key} raw={text[key]}>
+      {rich(text[key])}
+    </E>
+  );
   const [sent, setSent] = useState(false);
 
   // Opens WhatsApp with the enquiry details pre-filled for the photographer.
@@ -49,13 +55,13 @@ export default function BookingForm({
     return (
       <div>
         <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-          {text.thanks_label}
+          {ed("thanks_label")}
         </p>
         <p className="serif h2">
-          {rich(text.thanks_title)}
+          {ed("thanks_title")}
         </p>
         <p className="muted" style={{ marginTop: 24, maxWidth: "40ch" }}>
-          {text.thanks_text}
+          {ed("thanks_text")}
         </p>
       </div>
     );
@@ -64,23 +70,23 @@ export default function BookingForm({
   return (
     <form className="form" onSubmit={onSubmit}>
       <div className="field">
-        <label className="eyebrow" htmlFor="name">{text.form_name}</label>
+        <label className="eyebrow" htmlFor="name">{ed("form_name")}</label>
         <input id="name" name="name" required autoComplete="name" />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="email">{text.form_email}</label>
+        <label className="eyebrow" htmlFor="email">{ed("form_email")}</label>
         <input id="email" name="email" type="email" required autoComplete="email" />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="phone">{text.form_phone}</label>
+        <label className="eyebrow" htmlFor="phone">{ed("form_phone")}</label>
         <input id="phone" name="phone" type="tel" autoComplete="tel" />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="date">{text.form_date}</label>
+        <label className="eyebrow" htmlFor="date">{ed("form_date")}</label>
         <input id="date" name="date" type="date" required />
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="genre">{text.form_genre}</label>
+        <label className="eyebrow" htmlFor="genre">{ed("form_genre")}</label>
         <select id="genre" name="genre" value={selected} onChange={(e) => setSelected(e.target.value)}>
           {genres.map((g) => (
             <option key={g.slug} value={g.slug}>{g.title}</option>
@@ -88,7 +94,7 @@ export default function BookingForm({
         </select>
       </div>
       <div className="field">
-        <label className="eyebrow" htmlFor="package">{text.form_package}</label>
+        <label className="eyebrow" htmlFor="package">{ed("form_package")}</label>
         <select id="package" name="package" key={selected} defaultValue={pkg}>
           {pricing[selected].map((t) => (
             <option key={t.name} value={t.name}>
@@ -99,16 +105,16 @@ export default function BookingForm({
         </select>
       </div>
       <div className="field full">
-        <label className="eyebrow" htmlFor="location">{text.form_location}</label>
+        <label className="eyebrow" htmlFor="location">{ed("form_location")}</label>
         <input id="location" name="location" placeholder={text.form_location_hint} />
       </div>
       <div className="field full">
-        <label className="eyebrow" htmlFor="message">{text.form_message}</label>
+        <label className="eyebrow" htmlFor="message">{ed("form_message")}</label>
         <textarea id="message" name="message" placeholder={text.form_message_hint} />
       </div>
       <div className="field full">
         <button type="submit" className="btn" style={{ justifySelf: "start" }}>
-          {text.form_submit}
+          {ed("form_submit")}
         </button>
       </div>
     </form>

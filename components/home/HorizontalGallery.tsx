@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { E } from "@/components/E";
 import { getContent } from "@/lib/content";
 import { rich } from "@/lib/rich";
 import { getPortfolio } from "@/lib/portfolio";
@@ -23,10 +24,10 @@ export default async function HorizontalGallery() {
       <div className="hscroll-sticky">
         <div className="hscroll-track">
           <div className="hscroll-intro">
-            <p className="eyebrow muted">{c.t("frames_label")}</p>
-            <h2 className="serif h2">{rich(c.t("frames_title"))}</h2>
+            <p className="eyebrow muted">{c.e("frames_label")}</p>
+            <h2 className="serif h2">{c.e("frames_title")}</h2>
             <p className="muted" style={{ maxWidth: "32ch" }}>
-              {c.t("frames_hint")}
+              {c.e("frames_hint")}
             </p>
           </div>
           {picks.map((p, i) => (
@@ -37,7 +38,11 @@ export default async function HorizontalGallery() {
                 </div>
               </Link>
               <figcaption>
-                <span className="eyebrow">{p.genre.title}</span>
+                <span className="eyebrow">
+                  <E k={`genre.${p.genre.slug}.title`} raw={p.genre.title}>
+                    {p.genre.title}
+                  </E>
+                </span>
                 <span className="eyebrow muted">{String(i + 1).padStart(2, "0")}</span>
               </figcaption>
             </figure>

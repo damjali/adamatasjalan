@@ -6,9 +6,9 @@ export default async function Statement() {
   return (
     <section className="section light container">
       <div className="split">
-        <p className="eyebrow">{c.t("statement_label")}</p>
+        <p className="eyebrow">{c.e("statement_label")}</p>
         <p className="serif statement">
-          {rich(c.t("statement_text"))}
+          {c.e("statement_text")}
         </p>
       </div>
     </section>

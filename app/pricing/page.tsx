@@ -3,8 +3,8 @@ import Link from "next/link";
 import Faq from "@/components/Faq";
 import PricingTabs from "@/components/PricingTabs";
 import { Reveal, RevealLines } from "@/components/Reveal";
-import { getContent } from "@/lib/content";
-import { getPriceData } from "@/lib/sheet";
+import { E } from "@/components/E";
+import { getContent, getPriceData, type PriceText } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
   return { title: (await getContent()).t("nav_pricing") };
@@ -15,6 +15,11 @@ type Props = { searchParams: Promise<{ genre?: string }> };
 export default async function PricingPage({ searchParams }: Props) {
   const { genre } = await searchParams;
   const [{ pricing, addOns, faqs, text }, { genres }] = await Promise.all([getPriceData(), getContent()]);
+  const ed = (k: keyof PriceText) => (
+    <E k={k} raw={text[k]}>
+      {text[k]}
+    </E>
+  );
   const initial = genres.some((g) => g.slug === genre) ? genre! : genres[0].slug;
 
   return (
@@ -24,10 +29,10 @@ export default async function PricingPage({ searchParams }: Props) {
           <div>
             <Reveal>
               <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-                {text.pricing_eyebrow}
+                {ed("pricing_eyebrow")}
               </p>
             </Reveal>
-            <RevealLines className="serif h1" lines={[<>{text.pricing_title_1}</>, <em key="l">{text.pricing_title_2}</em>]} />
+            <RevealLines className="serif h1" lines={[<>{ed("pricing_title_1")}</>, <em key="l">{ed("pricing_title_2")}</em>]} />
           </div>
         </div>
       </div>
@@ -36,14 +41,20 @@ export default async function PricingPage({ searchParams }: Props) {
 
       <section className="section container" style={{ paddingTop: 0 }}>
         <div className="split">
-          <p className="eyebrow">{text.addons_label}</p>
+          <p className="eyebrow">{ed("addons_label")}</p>
           <Reveal>
             <ul className="rows">
               {addOns.map((a) => (
-                <li key={a.name}>
-                  <span className="serif h3">{a.name}</span>
+                <li key={a.i}>
+                  <span className="serif h3">
+                    <E k={`addon.${a.i}.name`} raw={a.name}>
+                      {a.name}
+                    </E>
+                  </span>
                   <span className="eyebrow" style={{ alignSelf: "center" }}>
-                    {a.price}
+                    <E k={`addon.${a.i}.price`} raw={a.price}>
+                      {a.price}
+                    </E>
                   </span>
                 </li>
               ))}
@@ -54,7 +65,7 @@ export default async function PricingPage({ searchParams }: Props) {
 
       <section className="section container" style={{ paddingTop: 0 }}>
         <div className="split">
-          <p className="eyebrow">{text.faq_label}</p>
+          <p className="eyebrow">{ed("faq_label")}</p>
           <Reveal>
             <Faq faqs={faqs} />
           </Reveal>
@@ -63,9 +74,9 @@ export default async function PricingPage({ searchParams }: Props) {
 
       <section className="section dark container">
         <div className="cta">
-          <RevealLines className="serif h2" lines={[<>{text.cta_title}</>]} />
+          <RevealLines className="serif h2" lines={[<>{ed("cta_title")}</>]} />
           <Link href="/book" className="btn">
-            {text.cta_button}
+            {ed("cta_button")}
           </Link>
         </div>
       </section>

@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { Genre, Tier } from "@/lib/data";
-import type { PriceText } from "@/lib/sheet";
+import { E } from "@/components/E";
+import type { Genre } from "@/lib/data";
+import type { PriceText, PriceTier } from "@/lib/content";
 
 export default function PricingTabs({
   initial,
@@ -12,7 +13,7 @@ export default function PricingTabs({
   genres,
 }: {
   initial: string;
-  pricing: Record<string, Tier[]>;
+  pricing: Record<string, PriceTier[]>;
   text: PriceText;
   genres: Genre[];
 }) {
@@ -29,7 +30,9 @@ export default function PricingTabs({
             className={`tab${active === g.slug ? " active" : ""}`}
             onClick={() => setActive(g.slug)}
           >
-            {g.title}
+            <E k={`genre.${g.slug}.title`} raw={g.title}>
+              {g.title}
+            </E>
           </button>
         ))}
       </div>
@@ -37,27 +40,51 @@ export default function PricingTabs({
       <div className="container" style={{ paddingBlock: "clamp(48px, 6vw, 96px)" }}>
         <div className="tiers">
           {pricing[active].map((t) => (
-            <article key={t.name} className={`tier${t.featured ? " featured dark" : " light"}`}>
+            <article key={t.id} className={`tier${t.featured ? " featured dark" : " light"}`}>
               <div className="flex-between" style={{ alignItems: "center" }}>
-                <span className="eyebrow">{t.name}</span>
-                {t.featured && <span className="eyebrow muted">{text.most_loved_label}</span>}
+                <span className="eyebrow">
+                  <E k={`${t.id}.name`} raw={t.name}>
+                    {t.name}
+                  </E>
+                </span>
+                {t.featured && (
+                  <span className="eyebrow muted">
+                    <E k="most_loved_label" raw={text.most_loved_label}>
+                      {text.most_loved_label}
+                    </E>
+                  </span>
+                )}
               </div>
               <div>
                 <p className="serif price">
-                  <small>{text.currency}</small>
-                  {t.price.toLocaleString()}
+                  <small>
+                    <E k="currency" raw={text.currency}>
+                      {text.currency}
+                    </E>
+                  </small>
+                  <E k={`${t.id}.price`} raw={String(t.price)}>
+                    {t.price.toLocaleString()}
+                  </E>
                 </p>
                 <p className="muted" style={{ marginTop: 10 }}>
-                  {t.duration}
+                  <E k={`${t.id}.duration`} raw={t.duration}>
+                    {t.duration}
+                  </E>
                 </p>
               </div>
               <ul>
-                {t.features.map((f) => (
-                  <li key={f}>{f}</li>
+                {t.features.map((f, j) => (
+                  <li key={j}>
+                    <E k={`${t.id}.f${j}`} raw={f}>
+                      {f}
+                    </E>
+                  </li>
                 ))}
               </ul>
               <Link href={`/book?genre=${active}&package=${encodeURIComponent(t.name)}`} className="btn">
-                {text.book_button.replace("{name}", t.name)}
+                <E k="book_button" raw={text.book_button}>
+                  {text.book_button.replace("{name}", t.name)}
+                </E>
               </Link>
             </article>
           ))}

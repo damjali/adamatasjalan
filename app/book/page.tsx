@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import BookingForm from "@/components/BookingForm";
 import { Reveal, RevealLines } from "@/components/Reveal";
 import { getContent } from "@/lib/content";
-import { richLines } from "@/lib/rich";
-import { getPriceData } from "@/lib/sheet";
+import { getPriceData } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
   return { title: (await getContent()).t("book_meta_title") };
@@ -22,10 +21,10 @@ export default async function BookPage({ searchParams }: Props) {
       <div className="page-head">
         <Reveal>
           <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-            {c.t("book_label")}
+            {c.e("book_label")}
           </p>
         </Reveal>
-        <RevealLines className="serif h1" lines={richLines(c.t("book_title"))} />
+        <div className="serif h1">{c.eLines("book_title")}</div>
       </div>
 
       <div className="container section" style={{ paddingTop: 0 }}>
@@ -33,16 +32,16 @@ export default async function BookPage({ searchParams }: Props) {
           <Reveal>
             <ul className="contact-list">
               <li>
-                <span className="eyebrow muted">{c.t("book_email_label")}</span>
-                <a href={`mailto:${c.t("contact_email")}`}>{c.t("contact_email")}</a>
+                <span className="eyebrow muted">{c.e("book_email_label")}</span>
+                <a href={`mailto:${c.t("contact_email")}`}>{c.e("contact_email")}</a>
               </li>
               <li>
-                <span className="eyebrow muted">{c.t("book_whatsapp_label")}</span>
-                <a href={`https://wa.me/${c.t("contact_whatsapp")}`}>{c.t("contact_whatsapp_display")}</a>
+                <span className="eyebrow muted">{c.e("book_whatsapp_label")}</span>
+                <a href={`https://wa.me/${c.t("contact_whatsapp")}`}>{c.e("contact_whatsapp_display")}</a>
               </li>
               <li>
-                <span className="eyebrow muted">{c.t("book_studio_label")}</span>
-                <span>{c.t("contact_location")}</span>
+                <span className="eyebrow muted">{c.e("book_studio_label")}</span>
+                <span>{c.e("contact_location")}</span>
               </li>
             </ul>
           </Reveal>

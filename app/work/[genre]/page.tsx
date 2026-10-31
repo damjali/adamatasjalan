@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Gallery from "@/components/Gallery";
+import { E } from "@/components/E";
 import GenreHero from "@/components/GenreHero";
 import { Reveal, RevealLines } from "@/components/Reveal";
 import { getContent } from "@/lib/content";
-import { getPriceData } from "@/lib/sheet";
+import { getPriceData } from "@/lib/content";
 import { getPortfolio } from "@/lib/portfolio";
 
 // Always rendered on request so photos added to Drive show up straight away.
@@ -39,10 +40,16 @@ export default async function GenrePage({ params }: Props) {
             <div>
               <Reveal>
                 <p className="eyebrow muted" style={{ marginBottom: 24 }}>
-                  {c.t("work_eyebrow").replace("{n}", String(i + 1))}
+                  {c.e("work_eyebrow", { n: String(i + 1) })}
                 </p>
               </Reveal>
-              <RevealLines className="serif display" lines={[<em key="t">{genre.title}</em>]} />
+              <RevealLines className="serif display" lines={[
+                  <em key="t">
+                    <E k={`genre.${genre.slug}.title`} raw={genre.title}>
+                      {genre.title}
+                    </E>
+                  </em>,
+                ]} />
             </div>
           </div>
         </div>
@@ -53,8 +60,8 @@ export default async function GenrePage({ params }: Props) {
         <div className="container">
           <div className="genre-meta">
             <div>
-              <span className="eyebrow muted">{c.t("work_services_label")}</span>
-              <span>{c.t("work_services_value")}</span>
+              <span className="eyebrow muted">{c.e("work_services_label")}</span>
+              <span>{c.e("work_services_value")}</span>
             </div>
             <div>
               <span className="eyebrow muted">{text.from_label}</span>
@@ -64,7 +71,7 @@ export default async function GenrePage({ params }: Props) {
                 className="btn"
                 style={{ justifySelf: "start", marginTop: 10 }}
               >
-                {c.t("work_price_button").replace("{category}", genre.label)}
+                {c.e("work_price_button", { category: genre.label })}
               </Link>
             </div>
           </div>
@@ -73,7 +80,7 @@ export default async function GenrePage({ params }: Props) {
         <div className="section container" style={{ paddingTop: "clamp(32px, 5vw, 64px)" }}>
           {content.projects.length === 0 && (
             <p className="eyebrow muted" style={{ textAlign: "center" }}>
-              {c.t("work_empty")}
+              {c.e("work_empty")}
             </p>
           )}
 
@@ -83,8 +90,8 @@ export default async function GenrePage({ params }: Props) {
                 <span className="eyebrow muted">{String(n + 1).padStart(2, "0")}</span>
                 <h2 className="serif h2">{project.name}</h2>
                 <span className="eyebrow muted">{project.shots.length === 1
-                    ? c.t("work_photos_one")
-                    : c.t("work_photos_many").replace("{n}", String(project.shots.length))}</span>
+                    ? c.e("work_photos_one")
+                    : c.e("work_photos_many", { n: String(project.shots.length) })}</span>
               </div>
               <Gallery
                 shots={project.shots}

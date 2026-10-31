@@ -5,7 +5,6 @@ import GenreIndex from "@/components/home/GenreIndex";
 import HorizontalGallery from "@/components/home/HorizontalGallery";
 import { Reveal, RevealLines } from "@/components/Reveal";
 import { getContent } from "@/lib/content";
-import { rich, richLines } from "@/lib/rich";
 
 // Always rendered on request so photos added to Drive show up straight away.
 export const dynamic = "force-dynamic";
@@ -14,9 +13,9 @@ export default async function Home() {
   const c = await getContent();
   const marquee = (
     <>
-      <span>{rich(c.t("marquee_1"))}</span>
+      <span>{c.e("marquee_1")}</span>
       <span>—</span>
-      <span>{rich(c.t("marquee_2"))}</span>
+      <span>{c.e("marquee_2")}</span>
       <span>—</span>
     </>
   );
@@ -39,27 +38,24 @@ export default async function Home() {
       <section className="section light container">
         <div className="quote">
           <Reveal>
-            <p className="eyebrow muted">{c.t("quote_label")}</p>
+            <p className="eyebrow muted">{c.e("quote_label")}</p>
           </Reveal>
           <Reveal>
-            <blockquote className="serif">{rich(c.t("quote_text"))}</blockquote>
+            <blockquote className="serif">{c.e("quote_text")}</blockquote>
           </Reveal>
           <Reveal>
-            <p className="eyebrow">{c.t("quote_author")}</p>
+            <p className="eyebrow">{c.e("quote_author")}</p>
           </Reveal>
         </div>
       </section>
 
       <section className="section dark container">
         <div className="cta">
-          <p className="eyebrow muted">{c.t("home_cta_label")}</p>
-          <RevealLines
-            className="serif h1"
-            lines={richLines(c.t("home_cta_title"))}
-          />
+          <p className="eyebrow muted">{c.e("home_cta_label")}</p>
+          <div className="serif h1">{c.eLines("home_cta_title")}</div>
           <Reveal>
             <Link href="/book" className="btn">
-              {c.t("home_cta_button")}
+              {c.e("home_cta_button")}
             </Link>
           </Reveal>
         </div>

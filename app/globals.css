@@ -1167,3 +1167,56 @@ button {
     display: none;
   }
 }
+
+/* ---------- Admin editing ---------- */
+body.admin-mode [data-t] {
+  outline: 1px dashed rgba(200, 150, 74, 0.7);
+  outline-offset: 3px;
+  cursor: text;
+  min-width: 0.8em;
+  min-height: 1em;
+  display: inline-block;
+  white-space: pre-wrap;
+}
+body.admin-mode [data-t]:empty::before {
+  content: "+";
+  opacity: 0.5;
+}
+body.admin-mode [data-t]:focus {
+  outline: 2px solid #c8964a;
+  background: rgba(200, 150, 74, 0.14);
+}
+.admin-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  max-width: calc(100vw - 24px);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(14, 14, 14, 0.92);
+  color: #f6f4f0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+.admin-bar .admin-hint {
+  font-size: 12px;
+  opacity: 0.7;
+}
+.admin-bar .admin-status {
+  color: #c8964a;
+}
+.admin-link {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.admin-link:hover {
+  opacity: 1;
+}

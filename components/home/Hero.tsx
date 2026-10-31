@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { RevealLines } from "../Reveal";
 import { getContent } from "@/lib/content";
-import { richLines } from "@/lib/rich";
 
 export default async function Hero({ src }: { src: string }) {
   const c = await getContent();
@@ -12,13 +11,10 @@ export default async function Hero({ src }: { src: string }) {
       </div>
 
       <div className="hero-inner">
-        <RevealLines
-          className="serif display"
-          lines={richLines(c.t("hero_title"))}
-        />
+        <div className="serif display">{c.eLines("hero_title")}</div>
         <div className="hero-bottom">
-          <p className="eyebrow">{c.t("hero_subtitle")}</p>
-          <p className="eyebrow">{c.t("hero_scroll")}</p>
+          <p className="eyebrow">{c.e("hero_subtitle")}</p>
+          <p className="eyebrow">{c.e("hero_scroll")}</p>
         </div>
       </div>
     </section>
